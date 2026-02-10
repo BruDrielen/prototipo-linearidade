@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Teste Linearidade</title>
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="icon" href="data:,">
+</head>
+
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>Teste Linearidade</h1>
+      <p>Objetivo: checar desenho do estudo + se testes mínimos foram realizados, e avaliar se o modelo de regressão
+        usado foi coerente com o diagnóstico de homogeneidade (Cochran).</p>
+    </header>
+
+    <main class="grid">
+      <section class="card">
+        <h2>Entradas</h2>
+
+        <form id="formLinearidade" class="form">
+          <div class="fieldset">
+            <div class="legend">Desenho do estudo</div>
+
+            <label class="field">
+              <span>Número de níveis (nLevels) [mínimo 5]</span>
+              <input id="nLevels" name="nLevels" type="number" min="1" step="1" value="5" required />
+            </label>
+
+            <label class="field">
+              <span>Número de replicatas por nível (replicatesPerLevel) [mínimo 3]</span>
+              <input id="replicatesPerLevel" name="replicatesPerLevel" type="number" min="1" step="1" value="3"
+                required />
+            </label>
+          </div>
+
+          <div class="fieldset">
+            <div class="legend">Testes mínimos realizados no estudo</div>
+
+            <label class="field checkbox">
+              <input id="testCochranDone" type="checkbox" checked />
+              <span>Homogeneidade de variâncias (ex.: teste de Cochran)</span>
+            </label>
+
+            <div class="subblock">
+              <label class="field">
+                <span>Regressão usada no estudo</span>
+                <select id="regressionUsed" name="regressionUsed">
+                  <option value="nao_informado" selected>Não informado</option>
+                  <option value="nao_especificado">Regressão feita, mas modelo não especificado</option>
+                  <option value="MMQO">MMQO (ordinária)</option>
+                  <option value="MMQP">MMQP (ponderada)</option>
+                </select>
+              </label>
+
+              <div class="hint">
+                O veredito “correto/errado/inconclusivo” se refere especificamente ao uso da informação do Cochran
+                para escolher MMQO vs MMQP.
+              </div>
+            </div>
+
+            <label class="field checkbox">
+              <input id="testRDone" type="checkbox" checked />
+              <span>Coeficiente de Correlação (r)</span>
+            </label>
+
+            <label class="field checkbox">
+              <input id="testR2Done" type="checkbox" checked />
+              <span>Coeficiente de Determinação (r²)</span>
+            </label>
+
+            <label class="field checkbox">
+              <input id="testShapiroDone" type="checkbox" checked />
+              <span>Normalidade dos resíduos (Shapiro-Wilk )</span>
+            </label>
+
+            <label class="field checkbox">
+              <input id="testDurbinWatsonDone" type="checkbox" checked />
+              <span>Independência de resíduos (Ex: Durbin-Watson)</span>
+            </label>
+
+            <label class="field checkbox">
+              <input id="testAnovaDone" type="checkbox" checked />
+              <span>Significância da regressão (Ex: ANOVA)</span>
+            </label>
+
+            <label class="field checkbox">
+              <input id="testTInterceptDone" type="checkbox" checked />
+              <span>Intercepto (Ex: Teste T)</span>
+            </label>
+
+            <label class="field checkbox">
+              <input id="testOutliersDone" type="checkbox" checked />
+              <span>Outliers (Ex: Grubbs/Teste Q)</span>
+            </label>
+          </div>
+
+          <div class="fieldset">
+            <div class="legend">Resultados (preencha somente se o teste foi realizado)</div>
+
+            <label class="field checkbox">
+              <input id="homoscedastic" type="checkbox" />
+              <span>Modelo de regressão linear adequado ao teste de homogeneidade de variâncias</span>
+            </label>
+
+            <label class="field checkbox">
+              <input id="residualNormal" type="checkbox" checked />
+              <span>Resíduos normais (Ex: Shapiro)</span>
+            </label>
+
+            <label class="field checkbox">
+              <input id="independentResiduals" type="checkbox" checked />
+              <span>Independência (DW: sem evidência de autocorrelação)</span>
+            </label>
+
+            <label class="field checkbox">
+              <input id="hasOutliers" type="checkbox" />
+              <span>Outliers detectados</span>
+            </label>
+
+            <div class="hint">
+              Observação operacional: este módulo usa a informação do Cochran + modelo informado para dizer “correto/errado/inconclusivo”.
+              Se você preferir que este checkbox represente o diagnóstico do Cochran (homogêneas/heterogêneas), eu ajusto na próxima etapa.
+            </div>
+          </div>
+
+          <div class="actions">
+            <button id="btnExecutar" type="submit">Executar avaliação</button>
+            <button id="btnExemploOK" type="button" class="secondary">Exemplo OK</button>
+            <button id="btnExemploAjustes" type="button" class="secondary">Exemplo Ajustes</button>
+            <button id="btnExemploIncompleto" type="button" class="secondary">Exemplo Incompleto</button>
+          </div>
+
+          <div id="msg" class="msg" aria-live="polite"></div>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>Resultado</h2>
+        <div id="output" class="output">Aguardando execução…</div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="./js/js/src/runLinearidadeManual.js"></script>
+</body>
+
+</html>
+

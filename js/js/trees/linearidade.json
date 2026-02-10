@@ -1,0 +1,148 @@
+{
+  "id": "linearidade_checklist_v3",
+  "title": "Checklist + checagem de possível erro de regressão por homocedasticidade",
+  "root": {
+    "if": { "var": "nLevels", "op": "<", "value": 5 },
+    "then": {
+      "result": {
+        "status": "insuficiente_desenho",
+        "why": "O estudo não atende o mínimo de níveis para avaliação de linearidade.",
+        "recommendations": [
+          "Aumentar para pelo menos 5 níveis de concentração.",
+          "Garantir distribuição adequada dos níveis na faixa de trabalho."
+        ]
+      }
+    },
+    "else": {
+      "if": { "var": "replicatesPerLevel", "op": "<", "value": 3 },
+      "then": {
+        "result": {
+          "status": "insuficiente_desenho",
+          "why": "O estudo não atende o mínimo de replicatas por nível para suportar testes por variância (ex.: Cochran).",
+          "recommendations": [
+            "Aumentar para pelo menos 3 replicatas por nível.",
+            "Se não for possível, justificar limitações e restringir conclusões."
+          ]
+        }
+      },
+      "else": {
+        "if": {
+          "all": [
+            { "var": "testCochranDone", "op": "==", "value": false },
+            { "var": "regressionInformed", "op": "==", "value": true }
+          ]
+        },
+        "then": {
+          "result": {
+            "status": "potencial_erro_modelo",
+            "why": "A homocedasticidade não foi avaliada (Cochran ausente), mas a regressão usada foi informada. A escolha MMQO vs MMQP pode estar sem evidência e portanto equivocada.",
+            "recommendations": [
+              "Executar teste de homogeneidade de variâncias (ex.: Cochran) ou justificar método alternativo.",
+              "Depois do diagnóstico, confirmar se o modelo aplicado é coerente (MMQO se homocedástico, MMQP se heterocedástico)."
+            ]
+          }
+        },
+        "else": {
+          "if": { "var": "missingCount", "op": ">", "value": 0 },
+          "then": {
+            "result": {
+              "status": "incompleto",
+              "why": "Nem todos os testes mínimos foram realizados no estudo. Não é possível concluir conformidade do diagnóstico estatístico.",
+              "recommendations": [
+                "Executar os testes mínimos faltantes.",
+                "Registrar claramente quais testes foram aplicados e os respectivos resultados."
+              ]
+            }
+          },
+          "else": {
+            "if": {
+              "all": [
+                { "var": "testCochranDone", "op": "==", "value": true },
+                { "var": "regressionInformed", "op": "==", "value": true },
+                {
+                  "any": [
+                    {
+                      "all": [
+                        { "var": "homoscedastic", "op": "==", "value": true },
+                        { "var": "usedMMQP", "op": "==", "value": true }
+                      ]
+                    },
+                    {
+                      "all": [
+                        { "var": "homoscedastic", "op": "==", "value": false },
+                        { "var": "usedMMQO", "op": "==", "value": true }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            "then": {
+              "result": {
+                "status": "erro_modelo",
+                "why": "A regressão usada no estudo contradiz o diagnóstico de homocedasticidade. Se as variâncias são homogêneas use MMQO; se são heterogêneas use MMQP.",
+                "recommendations": [
+                  "Recalcular e reemitir resultados usando o modelo coerente com o diagnóstico de variâncias.",
+                  "Manter evidências do teste de homogeneidade e do critério de decisão no relatório."
+                ]
+              }
+            },
+            "else": {
+              "if": {
+                "any": [
+                  { "var": "homoscedastic", "op": "==", "value": false },
+                  { "var": "residualNormal", "op": "==", "value": false },
+                  { "var": "hasOutliers", "op": "==", "value": true }
+                ]
+              },
+              "then": {
+                "result": {
+                  "status": "ok_com_ajustes",
+                  "recommendedRegression": "MMQP (ponderada) ou robusta",
+                  "why": "Diagnósticos indicam heterocedasticidade e/ou não-normalidade e/ou presença de outliers.",
+                  "recommendedNext": [
+                    "Aplicar MMQP (ponderação por variância por nível) se heterocedasticidade.",
+                    "Se outliers persistirem, considerar regressão robusta ou investigar causa analítica.",
+                    "Reavaliar resíduos (resíduos vs concentração, box-plot) após ajuste."
+                  ],
+                  "notes": [
+                    "Mesmo com r² alto, heterocedasticidade e outliers podem invalidar inferências e estimativas (principalmente em baixos níveis)."
+                  ]
+                }
+              },
+              "else": {
+                "if": { "var": "independentResiduals", "op": "==", "value": false },
+                "then": {
+                  "result": {
+                    "status": "ok_com_alerta",
+                    "recommendedRegression": "MMQO (ordinária)",
+                    "why": "Diagnósticos principais passaram, mas há alerta de independência (Durbin-Watson).",
+                    "recommendedNext": [
+                      "Verificar se há ordem temporal, deriva instrumental ou efeito de sequência.",
+                      "Randomizar ordem de medição, se aplicável.",
+                      "Reavaliar independência após controle do efeito."
+                    ]
+                  }
+                },
+                "else": {
+                  "result": {
+                    "status": "ok",
+                    "recommendedRegression": "MMQO (ordinária)",
+                    "why": "Desenho atende mínimos, testes mínimos foram realizados, e diagnósticos principais não indicam problemas.",
+                    "recommendedNext": [
+                      "Manter relatório com evidências dos testes.",
+                      "Armazenar resíduos e gráficos para rastreabilidade.",
+                      "Documentar a faixa de trabalho e justificativas de nível/replicata."
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
