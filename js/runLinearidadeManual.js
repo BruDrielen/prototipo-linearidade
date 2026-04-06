@@ -206,12 +206,13 @@ function readAnswers(dom) {
     !answers.cochranResultMissing &&
     !answers.regressionModelMissing;
 
-  answers.resultadoValido =
-    !answers.modeloInconsistente &&
-    !answers.residuosInvalidos &&
-    !answers.anovaInvalida &&
-    !answers.interceptoInvalido &&
-    !answers.outliersInvalidos;
+answers.resultadoValido =
+  answers.execucaoCompleta &&
+  !answers.modeloInconsistente &&
+  !answers.residuosInvalidos &&
+  !answers.anovaInvalida &&
+  !answers.interceptoInvalido &&
+  !answers.outliersInvalidos;
 
   answers.estudoAdequado =
     answers.desenhoAdequado &&
@@ -380,7 +381,7 @@ function renderResult(answers, result) {
       </div>
 
       <div class="kv">
-        <div class="k">3. Consistência dos resultados</div>
+        <div class="k">3. Consistência auditável dos resultados</div>
         <div class="v">${answers.resultadoValido ? "✔ Consistente" : "✘ Inconsistente"}</div>
       </div>
 
