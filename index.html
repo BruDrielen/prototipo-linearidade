@@ -2,150 +2,186 @@
 <html lang="pt-BR">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Teste Linearidade</title>
-  <link rel="stylesheet" href="./css/style.css" />
-  <link rel="icon" href="data:,">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Verificação do estudo da Linearidade</title>
+    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="icon" href="data:," />
 </head>
 
 <body>
-  <div class="container">
-    <header class="header">
-      <h1>Teste Linearidade</h1>
-      <p>Objetivo: checar desenho do estudo + se testes mínimos foram realizados, e avaliar se o modelo de regressão
-        usado foi coerente com o diagnóstico de homogeneidade (Cochran).</p>
-    </header>
+    <div class="container">
+        <header class="header">
+            <h1>Verificação do estudo da Linearidade</h1>
+            <p>
+                Este sistema auxilia o usuário na verificação automatizada da linearidade com base em regras explícitas
+                derivadas de protocolos oficiais. O módulo audita desenho do estudo, completude dos testes,
+                coerência entre homogeneidade de variâncias e modelo de regressão, além de critérios
+                estatísticos complementares.
+            </p>
+        </header>
 
-    <main class="grid">
-      <section class="card">
-        <h2>Entradas</h2>
+        <main class="grid">
+            <section class="card">
+                <h2>Entradas da auditoria</h2>
 
-        <form id="formLinearidade" class="form">
-          <div class="fieldset">
-            <div class="legend">Desenho do estudo</div>
+                <form id="formLinearidade" class="form">
+                    <div class="fieldset">
+                        <div class="legend">1. Desenho do estudo</div>
 
-            <label class="field">
-              <span>Número de níveis (nLevels) [mínimo 5]</span>
-              <input id="nLevels" name="nLevels" type="number" min="1" step="1" value="5" required />
-            </label>
+                        <label class="field">
+                            <span>Número de níveis [mínimo 5]</span>
+                            <input id="nLevels" name="nLevels" type="number" min="1" step="1" value="5" required />
+                        </label>
 
-            <label class="field">
-              <span>Número de replicatas por nível (replicatesPerLevel) [mínimo 3]</span>
-              <input id="replicatesPerLevel" name="replicatesPerLevel" type="number" min="1" step="1" value="3"
-                required />
-            </label>
-          </div>
+                        <label class="field">
+                            <span>Número de replicatas por nível [mínimo 3]</span>
+                            <input id="replicatesPerLevel" name="replicatesPerLevel" type="number" min="1" step="1"
+                                value="3" required />
+                        </label>
+                    </div>
 
-          <div class="fieldset">
-            <div class="legend">Testes mínimos realizados no estudo</div>
+                    <div class="fieldset">
+                        <div class="legend">2. Testes mínimos reportados no estudo</div>
 
-            <label class="field checkbox">
-              <input id="testCochranDone" type="checkbox" checked />
-              <span>Homogeneidade de variâncias (ex.: teste de Cochran)</span>
-            </label>
+                        <label class="field checkbox">
+                            <input id="testCochranDone" type="checkbox" />
+                            <span>Homogeneidade de variâncias (teste de Cochran ou equivalente)</span>
+                        </label>
 
-            <div class="subblock">
-              <label class="field">
-                <span>Regressão usada no estudo</span>
-                <select id="regressionUsed" name="regressionUsed">
-                  <option value="nao_informado" selected>Não informado</option>
-                  <option value="nao_especificado">Regressão feita, mas modelo não especificado</option>
-                  <option value="MMQO">MMQO (ordinária)</option>
-                  <option value="MMQP">MMQP (ponderada)</option>
-                </select>
-              </label>
+                        <label class="field checkbox">
+                            <input id="testRDone" type="checkbox" />
+                            <span>Coeficiente de correlação (r)</span>
+                        </label>
 
-              <div class="hint">
-                O veredito “correto/errado/inconclusivo” se refere especificamente ao uso da informação do Cochran
-                para escolher MMQO vs MMQP.
-              </div>
-            </div>
+                        <label class="field checkbox">
+                            <input id="testR2Done" type="checkbox" />
+                            <span>Coeficiente de determinação (r²)</span>
+                        </label>
 
-            <label class="field checkbox">
-              <input id="testRDone" type="checkbox" checked />
-              <span>Coeficiente de Correlação (r)</span>
-            </label>
+                        <label class="field checkbox">
+                            <input id="testShapiroDone" type="checkbox" />
+                            <span>Normalidade dos resíduos (Shapiro-Wilk ou equivalente)</span>
+                        </label>
 
-            <label class="field checkbox">
-              <input id="testR2Done" type="checkbox" checked />
-              <span>Coeficiente de Determinação (r²)</span>
-            </label>
+                        <label class="field checkbox">
+                            <input id="testDurbinWatsonDone" type="checkbox" />
+                            <span>Independência dos resíduos (Durbin-Watson ou equivalente)</span>
+                        </label>
 
-            <label class="field checkbox">
-              <input id="testShapiroDone" type="checkbox" checked />
-              <span>Normalidade dos resíduos (Shapiro-Wilk )</span>
-            </label>
+                        <label class="field checkbox">
+                            <input id="testAnovaDone" type="checkbox" />
+                            <span>Significância da regressão (ANOVA ou equivalente)</span>
+                        </label>
 
-            <label class="field checkbox">
-              <input id="testDurbinWatsonDone" type="checkbox" checked />
-              <span>Independência de resíduos (Ex: Durbin-Watson)</span>
-            </label>
+                        <label class="field checkbox">
+                            <input id="testTInterceptDone" type="checkbox" />
+                            <span>Avaliação do intercepto (teste t ou equivalente)</span>
+                        </label>
 
-            <label class="field checkbox">
-              <input id="testAnovaDone" type="checkbox" checked />
-              <span>Significância da regressão (Ex: ANOVA)</span>
-            </label>
+                        <label class="field checkbox">
+                            <input id="testOutliersDone" type="checkbox" />
+                            <span>Avaliação de outliers (Grubbs, Dixon, teste Q ou equivalente)</span>
+                        </label>
+                    </div>
 
-            <label class="field checkbox">
-              <input id="testTInterceptDone" type="checkbox" checked />
-              <span>Intercepto (Ex: Teste T)</span>
-            </label>
+                    <div class="fieldset">
+                        <div class="legend">3. Informações para auditoria dos resultados</div>
 
-            <label class="field checkbox">
-              <input id="testOutliersDone" type="checkbox" checked />
-              <span>Outliers (Ex: Grubbs/Teste Q)</span>
-            </label>
-          </div>
+                        <label class="field">
+                            <span>Modelo de regressão utilizado no estudo</span>
+                            <select id="regressionUsed" name="regressionUsed">
+                                <option value="nao_informado" selected>Não informado</option>
+                                <option value="nao_especificado">Regressão realizada, mas modelo não especificado
+                                </option>
+                                <option value="MMQO">MMQO (Mínimos Quadrados Ordinários)</option>
+                                <option value="MMQP">MMQP (Mínimos Quadrados Ponderados)</option>
+                            </select>
+                        </label>
 
-          <div class="fieldset">
-            <div class="legend">Resultados (preencha somente se o teste foi realizado)</div>
+                        <label class="field">
+                            <span>Resultado do teste de homogeneidade de variâncias</span>
+                            <select id="varianceProfile" name="varianceProfile">
+                                <option value="nao_informado" selected>Não informado</option>
+                                <option value="homogeneas">Variâncias homogêneas</option>
+                                <option value="heterogeneas">Variâncias heterogêneas</option>
+                            </select>
+                        </label>
 
-            <label class="field checkbox">
-              <input id="homoscedastic" type="checkbox" />
-              <span>Modelo de regressão linear adequado ao teste de homogeneidade de variâncias</span>
-            </label>
+                        <div class="hint">
+                            Esta seção separa explicitamente o resultado do teste de homogeneidade
+                            do modelo de regressão utilizado. Isso permite auditar se a escolha entre
+                            MMQO e MMQP foi tecnicamente coerente com o perfil de variância reportado.
+                        </div>
+                    </div>
 
-            <label class="field checkbox">
-              <input id="residualNormal" type="checkbox" checked />
-              <span>Resíduos normais (Ex: Shapiro)</span>
-            </label>
+                    <div class="fieldset">
+                        <div class="legend">4. Resultados dos critérios estatísticos complementares</div>
 
-            <label class="field checkbox">
-              <input id="independentResiduals" type="checkbox" checked />
-              <span>Independência (DW: sem evidência de autocorrelação)</span>
-            </label>
+                        <label class="field checkbox">
+                            <input id="residualNormal" type="checkbox" />
+                            <span>Os resíduos atenderam ao critério de normalidade</span>
+                        </label>
 
-            <label class="field checkbox">
-              <input id="hasOutliers" type="checkbox" />
-              <span>Outliers detectados</span>
-            </label>
+                        <label class="field checkbox">
+                            <input id="independentResiduals" type="checkbox" />
+                            <span>Os resíduos atenderam ao critério de independência</span>
+                        </label>
 
-            <div class="hint">
-              Observação operacional: este módulo usa a informação do Cochran + modelo informado para dizer “correto/errado/inconclusivo”.
-              Se você preferir que este checkbox represente o diagnóstico do Cochran (homogêneas/heterogêneas), eu ajusto na próxima etapa.
-            </div>
-          </div>
+                        <label class="field checkbox">
+                            <input id="regressionSignificant" type="checkbox" />
+                            <span>A regressão foi considerada significativa</span>
+                        </label>
 
-          <div class="actions">
-            <button id="btnExecutar" type="submit">Executar avaliação</button>
-            <button id="btnExemploOK" type="button" class="secondary">Exemplo OK</button>
-            <button id="btnExemploAjustes" type="button" class="secondary">Exemplo Ajustes</button>
-            <button id="btnExemploIncompleto" type="button" class="secondary">Exemplo Incompleto</button>
-          </div>
+                        <label class="field checkbox">
+                            <input id="interceptAcceptable" type="checkbox" />
+                            <span>O intercepto atendeu ao critério adotado no estudo</span>
+                        </label>
 
-          <div id="msg" class="msg" aria-live="polite"></div>
-        </form>
-      </section>
+                        <label class="field checkbox">
+                            <input id="outliersAcceptable" type="checkbox" />
+                            <span>A condição de outliers foi considerada aceitável</span>
+                        </label>
 
-      <section class="card">
-        <h2>Resultado</h2>
-        <div id="output" class="output">Aguardando execução…</div>
-      </section>
-    </main>
-  </div>
+                        <div class="hint">
+                            Marque os resultados apenas quando o respectivo teste tiver sido reportado no estudo.
+                            Os campos são habilitados automaticamente conforme os testes mínimos informados acima.
+                        </div>
+                    </div>
 
-  <script type="module" src="./js/js/src/runLinearidadeManual.js"></script>
+                    <div class="actions">
+                        <button id="btnExecutar" type="submit">Executar avaliação</button>
+                        <button id="btnSaveAnalysis" type="button" class="secondary">Salvar análise</button>
+                        <button id="btnExportHistory" type="button" class="secondary">Exportar histórico</button>
+                        <button id="btnClearHistory" type="button" class="secondary">Limpar histórico</button>
+                    </div>
+
+                    <div id="msg" class="msg" aria-live="polite"></div>
+                </form>
+            </section>
+
+            <section class="card">
+                <h2>Resultado da auditoria</h2>
+                <div id="output" class="output">
+                    <div class="kv">
+                        <div class="v">Preencha os campos e execute a avaliação.</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card full">
+                <h2>Histórico local de análises</h2>
+                <div class="hint">
+                    As análises ficam salvas apenas no navegador e no dispositivo atual, por meio de armazenamento
+                    local.
+                </div>
+                <div id="historyList" class="history-list"></div>
+            </section>
+        </main>
+    </div>
+
+
+    <script type="module" src="./js/runLinearidadeManual.js"></script>
 </body>
 
 </html>
