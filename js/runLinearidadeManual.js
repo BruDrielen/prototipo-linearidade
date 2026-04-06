@@ -16,8 +16,13 @@ const REQUIRED_TESTS = [
 /* ===== LOAD TREE ===== */
 
 async function loadTree() {
- const res = await fetch("./linearidade.json");
-  if (!res.ok) throw new Error("Falha ao carregar linearidade.json");
+  const jsonUrl = new URL("./linearidade.json", import.meta.url);
+  const res = await fetch(jsonUrl);
+
+  if (!res.ok) {
+    throw new Error("Falha ao carregar linearidade.json");
+  }
+
   return res.json();
 }
 
