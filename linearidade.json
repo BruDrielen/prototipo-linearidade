@@ -1,0 +1,135 @@
+{
+  "root": {
+    "if": {
+      "var": "nLevels",
+      "op": "<",
+      "value": 5
+    },
+    "then": {
+      "result": {
+        "status": "INADEQUADO",
+        "why": "Número de níveis insuficiente (< 5). O desenho experimental não atende ao mínimo recomendado."
+      }
+    },
+    "else": {
+      "if": {
+        "var": "replicatesPerLevel",
+        "op": "<",
+        "value": 3
+      },
+      "then": {
+        "result": {
+          "status": "INADEQUADO",
+          "why": "Número de replicatas por nível insuficiente (< 3)."
+        }
+      },
+      "else": {
+        "if": {
+          "var": "missingCount",
+          "op": ">",
+          "value": 0
+        },
+        "then": {
+          "result": {
+            "status": "INCONCLUSIVO",
+            "why": "O estudo não reporta todos os testes mínimos definidos para a auditoria da linearidade.",
+            "recommendations": [
+              "Completar o reporte dos testes mínimos obrigatórios.",
+              "Apresentar explicitamente os resultados estatísticos utilizados no julgamento da linearidade."
+            ]
+          }
+        },
+        "else": {
+          "if": {
+            "any": [
+              {
+                "var": "cochranResultMissing",
+                "op": "==",
+                "value": true
+              },
+              {
+                "var": "regressionModelMissing",
+                "op": "==",
+                "value": true
+              }
+            ]
+          },
+          "then": {
+            "result": {
+              "status": "INCONCLUSIVO",
+              "why": "O estudo reporta o teste, mas não fornece informação suficiente para auditar a coerência entre homogeneidade de variâncias e modelo de regressão."
+            }
+          },
+          "else": {
+            "if": {
+              "var": "modeloInconsistente",
+              "op": "==",
+              "value": true
+            },
+            "then": {
+              "result": {
+                "status": "INADEQUADO",
+                "why": "O modelo de regressão informado é incompatível com o diagnóstico de homogeneidade de variâncias."
+              }
+            },
+            "else": {
+              "if": {
+                "any": [
+                  {
+                    "var": "residuosInvalidos",
+                    "op": "==",
+                    "value": true
+                  },
+                  {
+                    "var": "anovaInvalida",
+                    "op": "==",
+                    "value": true
+                  },
+                  {
+                    "var": "interceptoInvalido",
+                    "op": "==",
+                    "value": true
+                  },
+                  {
+                    "var": "outliersInvalidos",
+                    "op": "==",
+                    "value": true
+                  }
+                ]
+              },
+              "then": {
+                "result": {
+                  "status": "INADEQUADO",
+                  "why": "Há falhas em um ou mais critérios estatísticos complementares da avaliação da linearidade."
+                }
+              },
+              "else": {
+                "if": {
+                  "var": "estudoAdequado",
+                  "op": "==",
+                  "value": true
+                },
+                "then": {
+                  "result": {
+                    "status": "ADEQUADO",
+                    "why": "O estudo atende aos critérios mínimos de desenho, execução e consistência dos resultados para a auditoria da linearidade.",
+                    "notes": [
+                      "A classificação refere-se ao escopo de auditoria configurado neste módulo.",
+                      "A adequação foi julgada com base nas regras explícitas implementadas no sistema."
+                    ]
+                  }
+                },
+                "else": {
+                  "result": {
+                    "status": "INADEQUADO",
+                    "why": "O estudo apresenta inconsistências que impedem sua classificação como adequado."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
