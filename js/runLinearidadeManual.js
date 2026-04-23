@@ -104,11 +104,29 @@ function downloadTextFile(filename, content, type = "application/json;charset=ut
 
 /* ===== LOCAL STORAGE ===== */
 
+/* ===== STORAGE SEGURO ===== */
+
 const STORAGE_KEY = "linearidadeHistorico";
+let memoryHistory = [];
+
+function storageAvailable() {
+  try {
+    const testKey = "__storage_test__";
+    window.localStorage.setItem(testKey, "ok");
+    window.localStorage.removeItem(testKey);
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 function loadHistory() {
+  if (!storageAvailable()) {
+    return memoryHistory;
+  }
+
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = window.localStorage.getItem(STORAGE_KEY);
     return raw ? JSON.parse(raw) : [];
   } catch {
     return [];
@@ -116,7 +134,12 @@ function loadHistory() {
 }
 
 function saveHistory(history) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+  if (!storageAvailable()) {
+    memoryHistory = history;
+    return;
+  }
+
+  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
 }
 
 function addHistoryRecord(record) {
@@ -206,13 +229,13 @@ function readAnswers(dom) {
     !answers.cochranResultMissing &&
     !answers.regressionModelMissing;
 
-answers.resultadoValido =
-  answers.execucaoCompleta &&
-  !answers.modeloInconsistente &&
-  !answers.residuosInvalidos &&
-  !answers.anovaInvalida &&
-  !answers.interceptoInvalido &&
-  !answers.outliersInvalidos;
+  answers.resultadoValido =
+    answers.execucaoCompleta &&
+    !answers.modeloInconsistente &&
+    !answers.residuosInvalidos &&
+    !answers.anovaInvalida &&
+    !answers.interceptoInvalido &&
+    !answers.outliersInvalidos;
 
   answers.estudoAdequado =
     answers.desenhoAdequado &&
@@ -346,27 +369,25 @@ function renderResult(answers, result) {
         <div class="v">${escapeHtml(result.why || "-")}</div>
       </div>
 
-      ${
-        result.notes
-          ? `
+      ${result.notes
+      ? `
           <div class="kv">
             <div class="k">Notas técnicas</div>
             <div class="v">${toList(result.notes)}</div>
           </div>
         `
-          : ""
-      }
+      : ""
+    }
 
-      ${
-        result.recommendations
-          ? `
+      ${result.recommendations
+      ? `
           <div class="kv">
             <div class="k">Recomendações</div>
             <div class="v">${toList(result.recommendations)}</div>
           </div>
         `
-          : ""
-      }
+      : ""
+    }
 
       <hr class="hr">
 
@@ -395,11 +416,10 @@ function renderResult(answers, result) {
       <div class="kv">
         <div class="k">Conclusão técnica</div>
         <div class="v">
-          ${
-            answers.estudoAdequado
-              ? "O estudo apresenta condições suficientes para ser classificado como adequado no escopo desta auditoria de linearidade."
-              : "O estudo não apresenta condições suficientes para ser classificado como adequado no escopo desta auditoria de linearidade."
-          }
+          ${answers.estudoAdequado
+      ? "O estudo apresenta condições suficientes para ser classificado como adequado no escopo desta auditoria de linearidade."
+      : "O estudo não apresenta condições suficientes para ser classificado como adequado no escopo desta auditoria de linearidade."
+    }
         </div>
       </div>
     </div>
@@ -487,10 +507,15 @@ async function main() {
 
       addHistoryRecord(record);
       renderHistory(dom);
-      setMsg(dom, "Análise salva no histórico local.");
+
+      if (storageAvailable()) {
+        setMsg(dom, "Análise salva no histórico local.");
+      } else {
+        setMsg(dom, "Análise salva apenas nesta sessão. O navegador bloqueou o armazenamento local.");
+      }
     } catch (err) {
       console.error(err);
-      setMsg(dom, "Não foi possível salvar a análise.", true);
+      setMsg(dom, `Não foi possível salvar a análise: ${err.message}`, true);
     }
   });
 
@@ -501,7 +526,12 @@ async function main() {
   });
 
   dom.btnClearHistory?.addEventListener("click", () => {
-    localStorage.removeItem(STORAGE_KEY);
+    if (storageAvailable()) {
+      window.localStorage.removeItem(STORAGE_KEY);
+    } else {
+      memoryHistory = [];
+    }
+
     renderHistory(dom);
     setMsg(dom, "Histórico local apagado.");
   });
