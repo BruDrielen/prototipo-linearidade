@@ -58,8 +58,46 @@ function getDom() {
     btnSaveAnalysis: document.getElementById("btnSaveAnalysis"),
     btnExportHistory: document.getElementById("btnExportHistory"),
     btnClearHistory: document.getElementById("btnClearHistory"),
-    historyList: document.getElementById("historyList")
+    historyList: document.getElementById("historyList"),
+    btnExportReport: document.getElementById("btnExportReport")
   };
+}
+
+function buildTxtReport(record) {
+  const { formData, answers, result, createdAt } = record;
+
+  return `
+RELATÓRIO DE VERIFICAÇÃO DA ADEQUAÇÃO E SUFICIÊNCIA DO ESTUDO DE LINEARIDADE
+Data: ${formatDateTime(createdAt)}
+
+RESULTADO GLOBAL
+Status: ${result.status}
+Síntese: ${result.why || "-"}
+
+DESENHO DO ESTUDO
+Número de níveis: ${formData.nLevels}
+Replicatas por nível: ${formData.replicatesPerLevel}
+Conclusão do desenho: ${answers.desenhoAdequado ? "Adequado" : "Inadequado"}
+
+EXECUÇÃO DA AVALIAÇÃO
+Testes mínimos ausentes: ${answers.missingTests?.length ? answers.missingTests.join("; ") : "Nenhum"}
+Execução completa: ${answers.execucaoCompleta ? "Sim" : "Não"}
+
+VERIFICAÇÃO DOS RESULTADOS
+Modelo de regressão: ${formData.regressionUsed}
+Perfil de variância: ${formData.varianceProfile}
+Consistência do modelo: ${answers.modeloInconsistente ? "Inconsistente" : "Consistente"}
+Resíduos inválidos: ${answers.residuosInvalidos ? "Sim" : "Não"}
+ANOVA inválida: ${answers.anovaInvalida ? "Sim" : "Não"}
+Intercepto inválido: ${answers.interceptoInvalido ? "Sim" : "Não"}
+Outliers inválidos: ${answers.outliersInvalidos ? "Sim" : "Não"}
+
+CONCLUSÃO TÉCNICA
+${answers.estudoAdequado
+  ? "O estudo apresenta condições suficientes para ser classificado como adequado no escopo desta verificação da adequação e suficiência do estudo de linearidade."
+  : "O estudo não apresenta condições suficientes para ser classificado como adequado no escopo desta verificação da adequação e suficiência do estudo de linearidade."
+}
+`.trim();
 }
 
 /* ===== HELPERS ===== */
@@ -104,8 +142,6 @@ function downloadTextFile(filename, content, type = "application/json;charset=ut
 }
 
 /* ===== LOCAL STORAGE ===== */
-
-/* ===== STORAGE SEGURO ===== */
 
 const STORAGE_KEY = "linearidadeHistorico";
 let memoryHistory = [];
@@ -561,45 +597,33 @@ async function main() {
       setMsg(dom, "Análise removida do histórico.");
     }
   });
-}
 
-btnExportReport: document.getElementById("btnExportReport");
+  dom.btnExportReport?.addEventListener("click", () => {
+  try {
+    const answers = readAnswers(dom);
+    const result = runTree(tree.root, answers);
 
-function buildTxtReport(record) {
-  const { formData, answers, result, createdAt } = record;
+    const record = {
+      createdAt: nowIso(),
+      formData: snapshotForm(dom),
+      answers,
+      result
+    };
 
-  return `
-RELATÓRIO DE VERIFICAÇÃO DA ADEQUAÇÃO E SUFICIÊNCIA DO ESTUDO DE LINEARIDADE
-Data: ${formatDateTime(createdAt)}
+    const txt = buildTxtReport(record);
 
-RESULTADO GLOBAL
-Status: ${result.status}
-Síntese: ${result.why || "-"}
+    downloadTextFile(
+      "relatorio_linearidade.txt",
+      txt,
+      "text/plain;charset=utf-8"
+    );
 
-DESENHO DO ESTUDO
-Número de níveis: ${formData.nLevels}
-Replicatas por nível: ${formData.replicatesPerLevel}
-Conclusão do desenho: ${answers.desenhoAdequado ? "Adequado" : "Inadequado"}
-
-EXECUÇÃO DA AVALIAÇÃO
-Testes mínimos ausentes: ${answers.missingTests?.length ? answers.missingTests.join("; ") : "Nenhum"}
-Execução completa: ${answers.execucaoCompleta ? "Sim" : "Não"}
-
-VERIFICAÇÃO DOS RESULTADOS
-Modelo de regressão: ${formData.regressionUsed}
-Perfil de variância: ${formData.varianceProfile}
-Consistência do modelo: ${answers.modeloInconsistente ? "Inconsistente" : "Consistente"}
-Resíduos inválidos: ${answers.residuosInvalidos ? "Sim" : "Não"}
-ANOVA inválida: ${answers.anovaInvalida ? "Sim" : "Não"}
-Intercepto inválido: ${answers.interceptoInvalido ? "Sim" : "Não"}
-Outliers inválidos: ${answers.outliersInvalidos ? "Sim" : "Não"}
-
-CONCLUSÃO TÉCNICA
-${answers.estudoAdequado
-  ? "O estudo apresenta condições suficientes para ser classificado como adequado no escopo desta verificação da adequação e suficiência do estudo de linearidade."
-  : "O estudo não apresenta condições suficientes para ser classificado como adequado no escopo desta verificação da adequação e suficiência do estudo de linearidade."
-}
-`.trim();
+    setMsg(dom, "Relatório exportado em TXT.");
+  } catch (err) {
+    console.error(err);
+    setMsg(dom, "Não foi possível exportar o relatório.", true);
+  }
+});
 }
 
 main();
