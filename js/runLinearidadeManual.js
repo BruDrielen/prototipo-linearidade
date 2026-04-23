@@ -86,11 +86,12 @@ Execução completa: ${answers.execucaoCompleta ? "Sim" : "Não"}
 VERIFICAÇÃO DOS RESULTADOS
 Modelo de regressão: ${formData.regressionUsed}
 Perfil de variância: ${formData.varianceProfile}
-Consistência do modelo: ${answers.modeloInconsistente ? "Inconsistente" : "Consistente"}
-Resíduos inválidos: ${answers.residuosInvalidos ? "Sim" : "Não"}
-ANOVA inválida: ${answers.anovaInvalida ? "Sim" : "Não"}
-Intercepto inválido: ${answers.interceptoInvalido ? "Sim" : "Não"}
-Outliers inválidos: ${answers.outliersInvalidos ? "Sim" : "Não"}
+Há coerência entre o perfil de variância e o modelo de regressão? ${answers.modeloInconsistente ? "Não" : "Sim"}
+Os resíduos são compatíveis com os pressupostos avaliados? ${answers.residuosInvalidos ? "Não" : "Sim"}
+Há evidência de relação linear estatisticamente significativa? ${answers.anovaInvalida ? "Não" : "Sim"}
+O intercepto é compatível com o critério adotado no estudo? ${answers.interceptoInvalido ? "Não" : "Sim"}
+Há ausência de resultados discrepantes (outliers)? ${answers.outliersInvalidos ? "Não" : "Sim"}
+
 
 CONCLUSÃO TÉCNICA
 ${answers.estudoAdequado
