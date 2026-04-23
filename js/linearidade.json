@@ -112,9 +112,9 @@
                 "then": {
                   "result": {
                     "status": "ADEQUADO",
-                    "why": "O estudo atende aos critérios mínimos de desenho, execução e consistência dos resultados para a auditoria da linearidade.",
+                    "why": "O estudo atende aos critérios mínimos de desenho, execução, coerência estatística e consistência dos resultados para a avaliação da linearidade.",
                     "notes": [
-                      "A classificação refere-se ao escopo de auditoria configurado neste módulo.",
+                      "A classificação refere-se ao escopo de verificação configurado neste módulo.",
                       "A adequação foi julgada com base nas regras explícitas implementadas no sistema."
                     ]
                   }
@@ -122,7 +122,7 @@
                 "else": {
                   "result": {
                     "status": "INADEQUADO",
-                    "why": "O estudo apresenta inconsistências que impedem sua classificação como adequado."
+                    "why": "O estudo apresenta inconsistências, pois não atende aos critérios mínimos de desenho, execução, coerência estatística e/ou consistência dos resultados para a avaliação da linearidade. Recomenda-se revisar os critérios de adequação e as respostas fornecidas para identificar as pendências críticas."
                   }
                 }
               }
