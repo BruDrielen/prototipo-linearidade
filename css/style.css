@@ -1,352 +1,204 @@
 :root {
-  --bg: #0b1220;
-  --card: #111a2e;
+  --bg: #070c16;
+  --card: #101623;
   --text: #e9eefc;
-  --muted: #b8c2e3;
-  --border: rgba(255, 255, 255, 0.12);
-  --accent: #7aa2ff;
-  --accent-2: #9bb8ff;
-  --error: #ffb3b3;
-  --success: #b9f6ca;
-  --warning: #ffe08a;
-  --shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  --muted: #8b99b8;
+  --border: rgba(255, 255, 255, 0.1);
+  --accent: #5c85d6;
+  --accent-hover: #739cf1;
+  --error: #ff7b7b;
+  --success: #6be39f;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
-html,
-body {
+/* 1. TRAVANDO A PÁGINA PARA NÃO TER SCROLL GLOBAL */
+html, body {
   margin: 0;
   padding: 0;
-}
-
-body {
-  font-family: Arial, sans-serif;
-  background: linear-gradient(180deg, #0b1220 0%, #0f1830 100%);
+  height: 100vh; /* 100% da altura da tela */
+  overflow: hidden; /* Corta qualquer barra de rolagem na página inteira */
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
   color: var(--text);
-  line-height: 1.45;
-}
-
-.container {
-  max-width: 1240px;
-  margin: 0 auto;
-  padding: 24px;
-}
-
-.header {
-  margin-bottom: 18px;
-}
-
-.header h1 {
-  margin: 0 0 8px 0;
-  font-size: 34px;
-  line-height: 1.15;
-}
-
-.header p {
-  margin: 0;
-  color: var(--muted);
-  max-width: 980px;
-  font-size: 14px;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
-  gap: 18px;
-  align-items: start;
-}
-
-.card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 18px;
-  box-shadow: var(--shadow);
-}
-
-.card h2 {
-  margin: 0 0 14px 0;
-  font-size: 19px;
   line-height: 1.2;
 }
 
-.card.full {
-  grid-column: 1 / -1;
+/* O container preenche a tela e usa Flexbox para empurrar o grid */
+.container {
+  max-width: 1600px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 15px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.header { margin-bottom: 12px; flex-shrink: 0; }
+.header h1 { font-size: 28px; margin: 0 0 4px 0; color: #fff; }
+.header p { font-size: 14px; color: var(--muted); margin: 0; 
+}
+
+.hint {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+/* 2. GRID MASTER: Divide a tela entre Form (Topo) e Resultados/Histórico (Base) */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Duas colunas para a parte de baixo */
+  grid-template-rows: max-content 1fr; /* A linha de cima pega a altura do form, a de baixo pega o resto da tela */
+  gap: 15px;
+  flex-grow: 1; /* Preenche o resto do container */
+  min-height: 0;
+}
+
+/* CARDS */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  box-shadow: var(--shadow);
+}
+
+.card h2 { 
+  font-size: 12px; 
+  margin: 0 0 10px 0; 
+  color: var(--accent); 
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* 3. O CARD 1 (FORMULÁRIO) FICA 100% NA HORIZONTAL */
+.card:nth-child(1) {
+  grid-column: 1 / -1; /* Ocupa da coluna 1 até o final */
 }
 
 .form {
   display: grid;
-  gap: 14px;
+  grid-template-columns: repeat(1fr, 1fr); /* 4 colunas perfeitamente iguais */
+  gap: 10px;
+  align-items: stretch;
 }
 
+/* COMPACTAÇÃO EXTREMA DOS CAMPOS DO FORMULÁRIO */
 .fieldset {
   border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 14px;
-  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+  padding: 8px;
+  margin: 0;
+  background: rgba(255, 255, 255, 0.02);
+  display: flex;
+  flex-direction: column;
 }
 
-.legend {
-  color: var(--muted);
-  font-size: 13px;
-  margin-bottom: 12px;
-  font-weight: 700;
-  letter-spacing: 0.2px;
+/* Ajuste no fieldsetA para torná-lo menor */
+.fieldsetA {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 8px; 
+  margin: 5px 0; 
+  background: rgba(255, 255, 255, 0.02);
+  display: flex;
+  flex-direction: column;
+  width: fit-content; 
+  min-width: 250px;
 }
+
+/* Ajuste nos labels dentro do fieldsetA para economizar espaço */
+.fieldsetA .field {
+  margin-bottom: 4px;
+  font-size: 0.9rem; /* Texto ligeiramente menor */
+}
+
+.legend { font-size: 13px; font-weight: 700; color: #fff; text-transform: uppercase; margin-bottom: 6px; }
 
 .field {
-  display: grid;
-  gap: 6px;
-  padding: 11px;
+  display: flex;
+  flex-direction: column;
+  padding: 4px 6px;
+  margin-bottom: 4px;
+  background: rgba(0, 0, 0, 0.2);
   border: 1px solid var(--border);
-  border-radius: 12px;
-  background: rgba(0, 0, 0, 0.18);
-  margin-bottom: 12px;
+  border-radius: 4px;
 }
 
-.field:last-child {
-  margin-bottom: 0;
-}
+.field span { font-size: 13px; color: var(--muted); margin-bottom: 2px; }
 
-.field span {
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.field input[type="number"],
-.field select {
-  width: 100%;
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: rgba(0, 0, 0, 0.26);
+.field input[type="number"], .field select {
+  height: 20px; /* Mantém os inputs finos */
+  font-size: 14px;
+  padding: 0;
+  border: none;
+ background: rgb(61, 61, 61);
   color: var(--text);
   outline: none;
-  font-size: 14px;
 }
 
-.field input[type="number"]:focus,
-.field select:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px rgba(122, 162, 255, 0.18);
-}
-
-.field input:disabled,
-.field select:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+/* CHECKBOXES COLADOS UM NO OUTRO PARA ECONOMIZAR ALTURA */
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .field.checkbox {
-  grid-template-columns: 18px 1fr;
+  flex-direction: row; align-items: center; gap: 6px;
+  padding: 2px 4px; margin-bottom: 0;
+  border: none; background: transparent;
+  cursor: pointer;
+}
+
+.field.checkbox input[type="checkbox"] { margin: 0; width: 12px; height: 12px; }
+.field.checkbox span { font-size: 14px; margin: 0; color: var(--text); }
+
+/* RODAPÉ DO FORMULÁRIO (BOTÕES) */
+.actions {
+  grid-column: 1 / 5; /* Cruza as 4 colunas */
+  display: flex;
+  justify-content: flex-end;
   align-items: center;
   gap: 10px;
+  margin-top: 5px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
 }
 
-.field.checkbox input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  margin: 0;
-}
-
-.field.checkbox span {
-  color: var(--text);
-  font-size: 14px;
-}
-
-.hint {
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.45;
-  margin-top: 4px;
-}
-
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
+.msg { flex-grow: 1; font-size: 12px; color: var(--error); }
 
 button {
-  border: 1px solid var(--border);
-  background: var(--accent);
-  color: #08101f;
-  padding: 10px 14px;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: 700;
-  font-size: 14px;
-  transition: transform 0.06s ease, filter 0.15s ease, background 0.15s ease;
+  background: var(--accent); color: #fff; border: none;
+  padding: 6px 14px; border-radius: 4px; font-size: 14px;
+  font-weight: bold; cursor: pointer;
 }
+button:hover { filter: brightness(1.1); }
+button.secondary { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
 
-button:hover {
-  filter: brightness(1.05);
-}
-
-button:active {
-  transform: translateY(1px);
-}
-
-button.secondary {
-  background: transparent;
-  color: var(--text);
-}
-
-button.secondary:hover {
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.msg {
-  min-height: 18px;
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.output {
-  padding: 14px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: rgba(0, 0, 0, 0.22);
-  min-height: 140px;
-}
-
-.rWrap {
-  display: grid;
-  gap: 12px;
-}
-
-.badge {
-  display: inline-block;
-  width: fit-content;
-  padding: 5px 10px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 700;
-  border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.kv {
-  display: grid;
-  gap: 4px;
-}
-
-.kv .k {
-  color: var(--muted);
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.25px;
-}
-
-.kv .v {
-  font-size: 14px;
-}
-
-.hr {
-  border: none;
-  border-top: 1px solid var(--border);
-  margin: 2px 0;
-}
-
-ul {
-  margin: 0 0 0 18px;
-  padding: 0;
-}
-
-li {
-  margin-bottom: 4px;
-}
-
-.err {
-  color: var(--error);
-  font-size: 13px;
-  line-height: 1.45;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-
-.history-list {
-  display: grid;
-  gap: 12px;
-  margin-top: 14px;
-}
-
-.history-item {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 12px;
-  align-items: center;
-  padding: 12px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.03);
-}
-
-.history-main {
-  display: grid;
-  gap: 4px;
-}
-
-.history-main strong {
-  color: var(--accent-2);
-}
-
-.history-meta {
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.history-actions {
+/* 4. BASE DA TELA: RESULTADOS E HISTÓRICO */
+/* Eles dividem a parte de baixo e só rolam o conteúdo INTERNO se precisar */
+.result-card, .history-card {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  flex-direction: column;
+  min-height: 0; /* Impede que o card estoure a tela */
 }
 
-.history-empty {
-  padding: 14px;
-  border: 1px dashed var(--border);
-  border-radius: 12px;
-  color: var(--muted);
-  font-size: 13px;
-  background: rgba(255, 255, 255, 0.02);
+.output, .history-list {
+  flex-grow: 1;
+  overflow-y: auto; /* Scroll apenas dentro da caixinha */
+  padding: 10px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border);
 }
 
-@media (max-width: 980px) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
+/* Scrollbar fina para ficar elegante */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
-  .card.full {
-    grid-column: auto;
-  }
-}
-
-@media (max-width: 640px) {
-  .container {
-    padding: 16px;
-  }
-
-  .header h1 {
-    font-size: 28px;
-  }
-
-  .card {
-    padding: 14px;
-  }
-
-  .actions {
-    flex-direction: column;
-  }
-
-  .history-item {
-    grid-template-columns: 1fr;
-  }
-
-  .history-actions {
-    justify-content: flex-start;
-  }
-}
-
+.history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.history-header h2 { margin: 0; }
+.mini-btn { padding: 4px 8px; font-size: 14px; }
