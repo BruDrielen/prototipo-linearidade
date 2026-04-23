@@ -31,8 +31,8 @@
         },
         "then": {
           "result": {
-            "status": "INCONCLUSIVO",
-            "why": "O estudo não reporta todos os testes mínimos definidos para a auditoria da linearidade.",
+            "status": "INSUFICIENTE/INCONCLUSIVO",
+            "why": "O estudo não reporta todos os testes mínimos definidos para a avaliar a linearidade.",
             "recommendations": [
               "Completar o reporte dos testes mínimos obrigatórios.",
               "Apresentar explicitamente os resultados estatísticos utilizados no julgamento da linearidade."
@@ -56,7 +56,7 @@
           },
           "then": {
             "result": {
-              "status": "INCONCLUSIVO",
+              "status": "INSUFICIENTE/INCONCLUSIVO",
               "why": "O estudo reporta o teste, mas não fornece informação suficiente para auditar a coerência entre homogeneidade de variâncias e modelo de regressão."
             }
           },
