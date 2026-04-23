@@ -18,7 +18,7 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100vh; /* 100% da altura da tela */
-  overflow: hidden; /* Corta qualquer barra de rolagem na página inteira */
+  overflow: hidden;
   font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   background: var(--bg);
   color: var(--text);
@@ -75,7 +75,7 @@ html, body {
 
 /* 3. O CARD 1 (FORMULÁRIO) FICA 100% NA HORIZONTAL */
 .card:nth-child(1) {
-  grid-column: 1 / -1; /* Ocupa da coluna 1 até o final */
+  grid-column: 1 / -1;
 }
 
 .form {
