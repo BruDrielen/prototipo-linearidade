@@ -1,5 +1,6 @@
 import { runTree } from "./decisionTree.js";
 
+
 /* ===== CONFIG ===== */
 
 const REQUIRED_TESTS = [
@@ -409,7 +410,7 @@ function renderResult(answers, result) {
       <hr class="hr">
 
       <div class="kv">
-        <div class="k">Pendências críticas da auditoria</div>
+        <div class="k">Pendências críticas da verificação</div>
         <div class="v">${toList(auditWarnings)}</div>
       </div>
 
@@ -417,8 +418,8 @@ function renderResult(answers, result) {
         <div class="k">Conclusão técnica</div>
         <div class="v">
           ${answers.estudoAdequado
-      ? "O estudo apresenta condições suficientes para ser classificado como adequado no escopo desta auditoria de linearidade."
-      : "O estudo não apresenta condições suficientes para ser classificado como adequado no escopo desta auditoria de linearidade."
+      ? "O estudo apresenta condições suficientes para ser classificado como adequado no escopo desta verificação da adequação e suficiência do estudo de linearidade."
+      : "O estudo não apresenta condições suficientes para ser classificado como adequado no escopo desta verificação da adequação e suficiência do estudo de linearidade."
     }
         </div>
       </div>
@@ -560,6 +561,45 @@ async function main() {
       setMsg(dom, "Análise removida do histórico.");
     }
   });
+}
+
+btnExportReport: document.getElementById("btnExportReport");
+
+function buildTxtReport(record) {
+  const { formData, answers, result, createdAt } = record;
+
+  return `
+RELATÓRIO DE VERIFICAÇÃO DA ADEQUAÇÃO E SUFICIÊNCIA DO ESTUDO DE LINEARIDADE
+Data: ${formatDateTime(createdAt)}
+
+RESULTADO GLOBAL
+Status: ${result.status}
+Síntese: ${result.why || "-"}
+
+DESENHO DO ESTUDO
+Número de níveis: ${formData.nLevels}
+Replicatas por nível: ${formData.replicatesPerLevel}
+Conclusão do desenho: ${answers.desenhoAdequado ? "Adequado" : "Inadequado"}
+
+EXECUÇÃO DA AVALIAÇÃO
+Testes mínimos ausentes: ${answers.missingTests?.length ? answers.missingTests.join("; ") : "Nenhum"}
+Execução completa: ${answers.execucaoCompleta ? "Sim" : "Não"}
+
+VERIFICAÇÃO DOS RESULTADOS
+Modelo de regressão: ${formData.regressionUsed}
+Perfil de variância: ${formData.varianceProfile}
+Consistência do modelo: ${answers.modeloInconsistente ? "Inconsistente" : "Consistente"}
+Resíduos inválidos: ${answers.residuosInvalidos ? "Sim" : "Não"}
+ANOVA inválida: ${answers.anovaInvalida ? "Sim" : "Não"}
+Intercepto inválido: ${answers.interceptoInvalido ? "Sim" : "Não"}
+Outliers inválidos: ${answers.outliersInvalidos ? "Sim" : "Não"}
+
+CONCLUSÃO TÉCNICA
+${answers.estudoAdequado
+  ? "O estudo apresenta condições suficientes para ser classificado como adequado no escopo desta verificação da adequação e suficiência do estudo de linearidade."
+  : "O estudo não apresenta condições suficientes para ser classificado como adequado no escopo desta verificação da adequação e suficiência do estudo de linearidade."
+}
+`.trim();
 }
 
 main();
