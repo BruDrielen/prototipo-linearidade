@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Verificação do estudo da Linearidade</title>
-    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="css/style.css" />
     <link rel="icon" href="data:," />
 </head>
 
@@ -14,10 +14,8 @@
         <header class="header">
             <h1>Verificação do estudo da Linearidade</h1>
             <p>
-                Este sistema auxilia o usuário na verificação automatizada da linearidade com base em regras explícitas
-                derivadas de protocolos oficiais. O módulo audita desenho do estudo, completude dos testes,
-                coerência entre homogeneidade de variâncias e modelo de regressão, além de critérios
-                estatísticos complementares.
+                Auditoria automatizada de desenho de estudo, completude de testes e coerência estatística (MMQO vs
+                MMQP).
             </p>
         </header>
 
@@ -26,16 +24,14 @@
                 <h2>Entradas da auditoria</h2>
 
                 <form id="formLinearidade" class="form">
-                    <div class="fieldset">
+                    <div class="fieldsetA">
                         <div class="legend">1. Desenho do estudo</div>
-
                         <label class="field">
                             <span>Número de níveis [mínimo 5]</span>
                             <input id="nLevels" name="nLevels" type="number" min="1" step="1" value="5" required />
                         </label>
-
                         <label class="field">
-                            <span>Número de replicatas por nível [mínimo 3]</span>
+                            <span>Replicatas por nível [mínimo 3]</span>
                             <input id="replicatesPerLevel" name="replicatesPerLevel" type="number" min="1" step="1"
                                 value="3" required />
                         </label>
@@ -86,28 +82,23 @@
                     </div>
 
                     <div class="fieldset">
-                        <div class="legend">3. Informações para auditoria dos resultados</div>
-
+                        <div class="legend">3. Auditoria de Resultados</div>
                         <label class="field">
-                            <span>Modelo de regressão utilizado no estudo</span>
+                            <span>Modelo de regressão</span>
                             <select id="regressionUsed" name="regressionUsed">
                                 <option value="nao_informado" selected>Não informado</option>
-                                <option value="nao_especificado">Regressão realizada, mas modelo não especificado
-                                </option>
-                                <option value="MMQO">MMQO (Mínimos Quadrados Ordinários)</option>
-                                <option value="MMQP">MMQP (Mínimos Quadrados Ponderados)</option>
+                                <option value="MMQO">MMQO (Ordinários)</option>
+                                <option value="MMQP">MMQP (Ponderados)</option>
                             </select>
                         </label>
-
                         <label class="field">
-                            <span>Resultado do teste de homogeneidade de variâncias</span>
+                            <span>Perfil de Variância</span>
                             <select id="varianceProfile" name="varianceProfile">
                                 <option value="nao_informado" selected>Não informado</option>
-                                <option value="homogeneas">Variâncias homogêneas</option>
-                                <option value="heterogeneas">Variâncias heterogêneas</option>
+                                <option value="homogeneas">Homogêneas</option>
+                                <option value="heterogeneas">Heterogêneas</option>
                             </select>
                         </label>
-
                         <div class="hint">
                             Esta seção separa explicitamente o resultado do teste de homogeneidade
                             do modelo de regressão utilizado. Isso permite auditar se a escolha entre
@@ -116,7 +107,7 @@
                     </div>
 
                     <div class="fieldset">
-                        <div class="legend">4. Resultados dos critérios estatísticos complementares</div>
+                        <div class="legend">4. Resultados dos critérios estatísticos reportados no estudo</div>
 
                         <label class="field checkbox">
                             <input id="residualNormal" type="checkbox" />
@@ -144,23 +135,21 @@
                         </label>
 
                         <div class="hint">
-                            Marque os resultados apenas quando o respectivo teste tiver sido reportado no estudo.
+                            Marque os resultados apenas quando o respectivo teste tiver sido reportado 
+                            no estudo. Caso contrário, deixe desmarcado.
                             Os campos são habilitados automaticamente conforme os testes mínimos informados acima.
                         </div>
                     </div>
 
                     <div class="actions">
-                        <button id="btnExecutar" type="submit">Executar avaliação</button>
+                        <div id="msg" class="msg" aria-live="polite"></div>
                         <button id="btnSaveAnalysis" type="button" class="secondary">Salvar análise</button>
-                        <button id="btnExportHistory" type="button" class="secondary">Exportar histórico</button>
-                        <button id="btnClearHistory" type="button" class="secondary">Limpar histórico</button>
+                        <button id="btnExecutar" type="submit">Executar avaliação</button>
                     </div>
-
-                    <div id="msg" class="msg" aria-live="polite"></div>
                 </form>
             </section>
 
-            <section class="card">
+            <section class="card result-card">
                 <h2>Resultado da auditoria</h2>
                 <div id="output" class="output">
                     <div class="kv">
@@ -169,17 +158,18 @@
                 </div>
             </section>
 
-            <section class="card full">
-                <h2>Histórico local de análises</h2>
-                <div class="hint">
-                    As análises ficam salvas apenas no navegador e no dispositivo atual, por meio de armazenamento
-                    local.
+            <section class="card history-card">
+                <div class="history-header">
+                    <h2>Histórico Local</h2>
+                    <div class="history-actions-top">
+                        <button id="btnExportHistory" type="button" class="mini-btn secondary">Exportar</button>
+                        <button id="btnClearHistory" type="button" class="mini-btn danger">Limpar</button>
+                    </div>
                 </div>
                 <div id="historyList" class="history-list"></div>
             </section>
         </main>
     </div>
-
 
     <script type="module" src="./js/runLinearidadeManual.js"></script>
 </body>
