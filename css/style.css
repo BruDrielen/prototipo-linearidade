@@ -36,8 +36,8 @@ html, body {
 }
 
 .header { margin-bottom: 12px; flex-shrink: 0; }
-.header h1 { font-size: 28px; margin: 0 0 4px 0; color: #fff; }
-.header p { font-size: 13px; color: var(--muted); margin: 0; 
+.header h1 { font-size: 26px; margin: 0 0 4px 0; color: #fff; }
+.header p { font-size: 12px; color: var(--muted); margin: 0; 
 }
 
 .hint {
@@ -134,7 +134,7 @@ html, body {
   font-size: 12px;
   padding: 0;
   border: none;
- background: rgb(61, 61, 61);
+  background: rgb(61, 61, 61);
   color: var(--text);
   outline: none;
 }
