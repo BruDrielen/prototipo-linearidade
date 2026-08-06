@@ -9,28 +9,45 @@
   --error: #ff7b7b;
   --success: #6be39f;
   --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+
+  --espaco-1: clamp(0.25rem, 0.2rem + 0.2vw, 0.4rem);
+  --espaco-2: clamp(0.5rem, 0.35rem + 0.45vw, 0.8rem);
+  --espaco-3: clamp(0.75rem, 0.55rem + 0.7vw, 1.15rem);
+  --espaco-4: clamp(1rem, 0.75rem + 1vw, 1.6rem);
+  --raio: clamp(0.45rem, 0.35rem + 0.25vw, 0.7rem);
+  --fonte-base: clamp(0.82rem, 0.76rem + 0.18vw, 0.95rem);
+  --fonte-menor: clamp(0.74rem, 0.7rem + 0.14vw, 0.84rem);
+  --controle-altura: clamp(2.25rem, 2.05rem + 0.45vw, 2.75rem);
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 html {
-  min-width: 320px;
+  min-width: 0;
   min-height: 100%;
-  background: var(--bg);
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
+  min-width: 0;
   min-height: 100vh;
   min-height: 100dvh;
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: visible;
   font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: var(--fonte-base);
+  line-height: 1.45;
   background: var(--bg);
   color: var(--text);
-  line-height: 1.4;
 }
 
 button,
@@ -39,127 +56,168 @@ select {
   font: inherit;
 }
 
+button,
+label,
+select,
+input {
+  -webkit-tap-highlight-color: transparent;
+}
+
 .container {
   width: min(100%, 1600px);
+  min-width: 0;
   min-height: 100vh;
   min-height: 100dvh;
-  margin: 0 auto;
-  padding: clamp(12px, 2vw, 24px);
+  margin-inline: auto;
+  padding-top: max(var(--espaco-3), env(safe-area-inset-top));
+  padding-right: max(var(--espaco-3), env(safe-area-inset-right));
+  padding-bottom: max(var(--espaco-3), env(safe-area-inset-bottom));
+  padding-left: max(var(--espaco-3), env(safe-area-inset-left));
 }
 
 .header {
-  margin-bottom: 16px;
+  min-width: 0;
+  margin-bottom: var(--espaco-3);
 }
 
 .header h1 {
-  margin: 0 0 6px;
-  font-size: clamp(1.35rem, 2.4vw, 1.9rem);
-  line-height: 1.2;
+  max-width: 100%;
+  margin: 0 0 var(--espaco-1);
+  font-size: clamp(1.3rem, 0.95rem + 1.45vw, 2rem);
+  line-height: 1.15;
   color: #fff;
   overflow-wrap: anywhere;
 }
 
-.header p {
+.header p,
+.hint {
+  max-width: 100%;
   margin: 0;
-  max-width: 95ch;
-  font-size: clamp(0.82rem, 1.2vw, 0.95rem);
   color: var(--muted);
+  font-size: var(--fonte-menor);
+  overflow-wrap: anywhere;
+}
+
+.hint {
+  margin-top: var(--espaco-1);
+  line-height: 1.45;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(12px, 1.5vw, 18px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--espaco-3);
+  min-width: 0;
   align-items: start;
 }
 
 .card {
   min-width: 0;
+  max-width: 100%;
+  padding: var(--espaco-3);
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: clamp(12px, 1.5vw, 18px);
+  border-radius: var(--raio);
   box-shadow: var(--shadow);
-}
-
-.card > h2,
-.history-header h2 {
-  margin: 0 0 12px;
-  font-size: 0.78rem;
-  line-height: 1.3;
-  color: var(--accent);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  overflow: hidden;
 }
 
 .card:first-child {
   grid-column: 1 / -1;
 }
 
+.card h2 {
+  max-width: 100%;
+  margin: 0 0 var(--espaco-2);
+  color: var(--accent);
+  font-size: var(--fonte-menor);
+  line-height: 1.3;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  overflow-wrap: anywhere;
+}
+
 .form {
   display: grid;
-  grid-template-columns: minmax(180px, 0.65fr) minmax(280px, 0.95fr) minmax(230px, 0.8fr) minmax(320px, 1.3fr);
-  gap: 12px;
+  grid-template-columns:
+    minmax(13rem, 0.6fr)
+    minmax(18rem, 0.9fr)
+    minmax(15rem, 0.75fr)
+    minmax(21rem, 1.28fr);
+  gap: var(--espaco-2);
+  min-width: 0;
   align-items: stretch;
 }
 
 .fieldset,
 .fieldsetA {
   display: flex;
+  flex-direction: column;
   min-width: 0;
   width: 100%;
+  max-width: 100%;
   margin: 0;
-  padding: 10px;
-  flex-direction: column;
-  border: 1px solid var(--border);
-  border-radius: 6px;
+  padding: var(--espaco-2);
   background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--raio) * 0.8);
+  overflow: hidden;
 }
 
 .legend {
-  margin-bottom: 8px;
-  font-size: 0.78rem;
-  font-weight: 700;
-  line-height: 1.3;
+  max-width: 100%;
+  margin-bottom: var(--espaco-2);
   color: #fff;
+  font-size: var(--fonte-menor);
+  font-weight: 700;
+  line-height: 1.35;
   text-transform: uppercase;
   overflow-wrap: anywhere;
 }
 
 .field {
   display: flex;
-  min-width: 0;
-  margin-bottom: 6px;
-  padding: 7px 8px;
   flex-direction: column;
-  border: 1px solid var(--border);
-  border-radius: 4px;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0 0 var(--espaco-1);
+  padding: var(--espaco-1) var(--espaco-2);
   background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--raio) * 0.65);
+  overflow: hidden;
+}
+
+.field:last-child {
+  margin-bottom: 0;
 }
 
 .field > span {
-  margin-bottom: 4px;
-  font-size: 0.78rem;
-  line-height: 1.35;
+  min-width: 0;
+  max-width: 100%;
+  margin-bottom: var(--espaco-1);
   color: var(--muted);
+  font-size: var(--fonte-menor);
+  line-height: 1.35;
   overflow-wrap: anywhere;
 }
 
 .field input[type="number"],
 .field select {
   width: 100%;
+  max-width: 100%;
   min-width: 0;
-  min-height: 34px;
-  padding: 5px 8px;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  outline: none;
-  background: #3d3d3d;
+  min-height: var(--controle-altura);
+  padding: 0.4rem 0.55rem;
   color: var(--text);
+  background: rgb(61, 61, 61);
+  border: 1px solid transparent;
+  border-radius: 0.3rem;
+  outline: none;
 }
 
-.field input[type="number"]:focus,
-.field select:focus,
+.field input[type="number"]:focus-visible,
+.field select:focus-visible,
 button:focus-visible {
   outline: 2px solid var(--accent-hover);
   outline-offset: 2px;
@@ -168,37 +226,37 @@ button:focus-visible {
 .checkbox-group {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--espaco-1);
+  min-width: 0;
 }
 
 .field.checkbox {
-  display: grid;
-  grid-template-columns: 18px minmax(0, 1fr);
-  gap: 8px;
-  align-items: start;
-  margin-bottom: 2px;
-  padding: 5px 4px;
-  border: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 0.55rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0.32rem 0.2rem;
   background: transparent;
+  border: 0;
   cursor: pointer;
+  overflow: visible;
 }
 
 .field.checkbox input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  margin: 2px 0 0;
+  flex: 0 0 auto;
+  width: 1rem;
+  height: 1rem;
+  margin: 0.15rem 0 0;
 }
 
 .field.checkbox span {
+  flex: 1 1 auto;
+  min-width: 0;
   margin: 0;
   color: var(--text);
-}
-
-.hint {
-  margin-top: 6px;
-  font-size: 0.76rem;
-  line-height: 1.45;
-  color: var(--muted);
+  line-height: 1.35;
   overflow-wrap: anywhere;
 }
 
@@ -206,33 +264,39 @@ button:focus-visible {
   grid-column: 1 / -1;
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
   justify-content: flex-end;
-  margin-top: 2px;
-  padding-top: 10px;
+  align-items: center;
+  gap: var(--espaco-2);
+  min-width: 0;
+  margin-top: var(--espaco-1);
+  padding-top: var(--espaco-2);
   border-top: 1px solid var(--border);
 }
 
 .msg {
-  min-width: min(100%, 260px);
-  flex: 1 1 260px;
-  font-size: 0.8rem;
+  flex: 1 1 16rem;
+  min-width: 0;
   color: var(--error);
+  font-size: var(--fonte-menor);
   overflow-wrap: anywhere;
 }
 
 button {
-  min-height: 36px;
-  padding: 7px 14px;
-  border: 0;
-  border-radius: 4px;
-  background: var(--accent);
+  flex: 0 1 auto;
+  max-width: 100%;
+  min-height: var(--controle-altura);
+  padding: 0.5rem 0.9rem;
   color: #fff;
-  font-size: 0.8rem;
+  background: var(--accent);
+  border: 1px solid transparent;
+  border-radius: 0.35rem;
+  font-size: var(--fonte-menor);
   font-weight: 700;
-  cursor: pointer;
+  line-height: 1.25;
+  text-align: center;
   white-space: normal;
+  overflow-wrap: anywhere;
+  cursor: pointer;
 }
 
 button:hover {
@@ -240,42 +304,123 @@ button:hover {
 }
 
 button.secondary {
-  border: 1px solid var(--accent);
-  background: transparent;
   color: var(--accent);
+  background: transparent;
+  border-color: var(--accent);
+}
+
+button.danger {
+  color: var(--error);
+  border-color: var(--error);
+}
+
+.mini-btn {
+  min-height: 2rem;
+  padding: 0.35rem 0.65rem;
 }
 
 .result-card,
 .history-card {
   display: flex;
-  min-width: 0;
-  min-height: 260px;
   flex-direction: column;
+  min-width: 0;
+  min-height: 0;
 }
 
 .output,
 .history-list {
   min-width: 0;
-  min-height: 210px;
-  max-height: 55vh;
-  overflow: auto;
-  padding: 10px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
+  max-width: 100%;
+  padding: var(--espaco-2);
   background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--raio) * 0.8);
+  overflow: visible;
+  overflow-wrap: anywhere;
+}
+
+.rWrap,
+.kv,
+.v,
+.k,
+.history-main,
+.history-item,
+.history-meta,
+.history-actions,
+.history-actions-top {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.badge {
+  display: inline-flex;
+  max-width: 100%;
+  margin-bottom: var(--espaco-2);
+  padding: 0.35rem 0.6rem;
+  color: #fff;
+  background: rgba(92, 133, 214, 0.22);
+  border: 1px solid rgba(92, 133, 214, 0.5);
+  border-radius: 999px;
+  font-size: var(--fonte-menor);
+  font-weight: 700;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.kv {
+  margin-bottom: var(--espaco-2);
+}
+
+.kv:last-child {
+  margin-bottom: 0;
+}
+
+.k {
+  margin-bottom: 0.2rem;
+  color: var(--muted);
+  font-size: var(--fonte-menor);
+  font-weight: 700;
+}
+
+.v {
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.v ul {
+  margin: 0.35rem 0 0;
+  padding-left: 1.25rem;
+}
+
+.v li + li {
+  margin-top: 0.25rem;
+}
+
+.hr {
+  margin: var(--espaco-3) 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+
+.err {
+  margin: 0;
+  color: var(--error);
+  white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 
 .history-header {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 12px;
-  align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
+  align-items: center;
+  gap: var(--espaco-2);
+  min-width: 0;
+  margin-bottom: var(--espaco-2);
 }
 
 .history-header h2 {
+  flex: 1 1 12rem;
   margin: 0;
 }
 
@@ -283,60 +428,58 @@ button.secondary {
 .history-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  justify-content: flex-end;
+  gap: var(--espaco-1);
 }
 
-.mini-btn {
-  min-height: 32px;
-  padding: 5px 9px;
-  font-size: 0.75rem;
+.history-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espaco-2);
+  padding: var(--espaco-2) 0;
+  border-bottom: 1px solid var(--border);
 }
 
-.history-item,
-.kv {
-  min-width: 0;
+.history-item:first-child {
+  padding-top: 0;
+}
+
+.history-item:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.history-main {
+  flex: 1 1 14rem;
   overflow-wrap: anywhere;
-}
-
-.history-item + .history-item,
-.kv + .kv {
-  margin-top: 10px;
 }
 
 .history-meta,
-.k {
+.history-empty {
   color: var(--muted);
-  font-size: 0.76rem;
-}
-
-.v {
-  min-width: 0;
-  overflow-wrap: anywhere;
-}
-
-.err {
-  color: var(--error);
-  white-space: pre-wrap;
+  font-size: var(--fonte-menor);
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 0.55rem;
+  height: 0.55rem;
 }
 
 ::-webkit-scrollbar-thumb {
-  border-radius: 4px;
   background: rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
 }
 
-/* Notebook e tablet em orientação horizontal. */
-@media (max-width: 1199px) {
+/* Desktop menor, notebook e tablet em paisagem: duas colunas no formulário. */
+@media (max-width: 1279px) {
   .form {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-/* Tablet em orientação vertical e telas estreitas. */
+/* Tablet em retrato e janelas estreitas: uma coluna por bloco. */
 @media (max-width: 899px) {
   .grid {
     grid-template-columns: minmax(0, 1fr);
@@ -346,29 +489,8 @@ button.secondary {
     grid-column: auto;
   }
 
-  .result-card,
-  .history-card {
-    min-height: 0;
-  }
-
-  .output,
-  .history-list {
-    max-height: none;
-  }
-}
-
-/* Celular e janelas pequenas. */
-@media (max-width: 639px) {
-  .container {
-    padding: 10px;
-  }
-
   .form {
     grid-template-columns: minmax(0, 1fr);
-  }
-
-  .card {
-    padding: 11px;
   }
 
   .actions {
@@ -378,42 +500,98 @@ button.secondary {
   .msg {
     flex-basis: 100%;
   }
+}
 
-  .actions button,
-  .history-actions-top button {
+/* Celulares: ações em largura total e espaços reduzidos proporcionalmente. */
+@media (max-width: 599px) {
+  :root {
+    --espaco-3: 0.7rem;
+    --espaco-4: 0.9rem;
+  }
+
+  .container {
+    padding-top: max(0.7rem, env(safe-area-inset-top));
+    padding-right: max(0.7rem, env(safe-area-inset-right));
+    padding-bottom: max(0.7rem, env(safe-area-inset-bottom));
+    padding-left: max(0.7rem, env(safe-area-inset-left));
+  }
+
+  .card {
+    padding: 0.75rem;
+  }
+
+  .actions > button,
+  .history-actions-top > button,
+  .history-actions > button {
+    flex: 1 1 100%;
     width: 100%;
-    min-height: 44px;
   }
 
-  .history-actions-top {
+  .history-actions-top,
+  .history-actions {
     width: 100%;
-  }
-
-  .field input[type="number"],
-  .field select {
-    min-height: 44px;
-  }
-
-  .field.checkbox {
-    grid-template-columns: 22px minmax(0, 1fr);
-    padding-block: 7px;
-  }
-
-  .field.checkbox input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
   }
 }
 
-/* Telas muito estreitas. */
-@media (max-width: 379px) {
-  .container {
-    padding-inline: 8px;
+/* Paisagem com pouca altura: compacta sem esconder nem limitar a rolagem. */
+@media (orientation: landscape) and (max-height: 600px) {
+  :root {
+    --espaco-1: 0.22rem;
+    --espaco-2: 0.45rem;
+    --espaco-3: 0.65rem;
+    --controle-altura: 2.2rem;
   }
 
-  .card,
-  .fieldset,
-  .fieldsetA {
-    padding: 9px;
+  .header {
+    margin-bottom: 0.6rem;
+  }
+
+  .header h1 {
+    font-size: clamp(1.1rem, 0.9rem + 1vw, 1.55rem);
+  }
+
+  .card {
+    padding: 0.7rem;
+  }
+
+  .field.checkbox {
+    padding-block: 0.22rem;
+  }
+}
+
+/* Dispositivos de toque: alvos suficientemente grandes sem alterar o fluxo. */
+@media (pointer: coarse) {
+  :root {
+    --controle-altura: max(2.75rem, 44px);
+  }
+
+  .field.checkbox {
+    min-height: 2.75rem;
+    align-items: center;
+  }
+
+  .field.checkbox input[type="checkbox"] {
+    width: 1.2rem;
+    height: 1.2rem;
+    margin-top: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Ações principais: os novos comandos permanecem legíveis e adaptáveis. */
+@media (max-width: 899px) {
+  .actions > button {
+    flex: 1 1 calc(50% - var(--espaco-2));
+  }
+}
+
+@media (max-width: 599px) {
+  .actions > button {
+    flex-basis: 100%;
   }
 }
