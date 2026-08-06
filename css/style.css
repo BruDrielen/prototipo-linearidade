@@ -11,198 +11,409 @@
   --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
-/* 1. TRAVANDO A PÁGINA PARA NÃO TER SCROLL GLOBAL */
-html, body {
+html {
+  min-width: 320px;
+  min-height: 100%;
+  background: var(--bg);
+}
+
+body {
   margin: 0;
-  padding: 0;
-  height: 100vh; /* 100% da altura da tela */
-  overflow: hidden;
-  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background: var(--bg);
   color: var(--text);
-  line-height: 1.2;
+  line-height: 1.4;
 }
 
-/* O container preenche a tela e usa Flexbox para empurrar o grid */
+button,
+input,
+select {
+  font: inherit;
+}
+
 .container {
-  max-width: 1600px;
-  height: 100%;
+  width: min(100%, 1600px);
+  min-height: 100vh;
+  min-height: 100dvh;
   margin: 0 auto;
-  padding: 15px 20px;
-  display: flex;
-  flex-direction: column;
+  padding: clamp(12px, 2vw, 24px);
 }
 
-.header { margin-bottom: 12px; flex-shrink: 0; }
-.header h1 { font-size: 28px; margin: 0 0 4px 0; color: #fff; }
-.header p { font-size: 12px; color: var(--muted); margin: 0; 
+.header {
+  margin-bottom: 16px;
 }
 
-.hint {
-  font-size: 12px;
+.header h1 {
+  margin: 0 0 6px;
+  font-size: clamp(1.35rem, 2.4vw, 1.9rem);
+  line-height: 1.2;
+  color: #fff;
+  overflow-wrap: anywhere;
+}
+
+.header p {
+  margin: 0;
+  max-width: 95ch;
+  font-size: clamp(0.82rem, 1.2vw, 0.95rem);
   color: var(--muted);
-  margin-top: 4px;
 }
 
-/* 2. GRID MASTER: Divide a tela entre Form (Topo) e Resultados/Histórico (Base) */
 .grid {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* Duas colunas para a parte de baixo */
-  grid-template-rows: max-content 1fr; /* A linha de cima pega a altura do form, a de baixo pega o resto da tela */
-  gap: 15px;
-  flex-grow: 1; /* Preenche o resto do container */
-  min-height: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(12px, 1.5vw, 18px);
+  align-items: start;
 }
 
-/* CARDS */
 .card {
+  min-width: 0;
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 12px 14px;
+  padding: clamp(12px, 1.5vw, 18px);
   box-shadow: var(--shadow);
 }
 
-.card h2 { 
-  font-size: 12px; 
-  margin: 0 0 10px 0; 
-  color: var(--accent); 
+.card > h2,
+.history-header h2 {
+  margin: 0 0 12px;
+  font-size: 0.78rem;
+  line-height: 1.3;
+  color: var(--accent);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.05em;
 }
 
-/* 3. O CARD 1 (FORMULÁRIO) FICA 100% NA HORIZONTAL */
-.card:nth-child(1) {
+.card:first-child {
   grid-column: 1 / -1;
 }
 
 .form {
   display: grid;
-  grid-template-columns: 0.60fr 0.90fr 0.75fr 1.28fr;
-  gap: 10px;
+  grid-template-columns: minmax(180px, 0.65fr) minmax(280px, 0.95fr) minmax(230px, 0.8fr) minmax(320px, 1.3fr);
+  gap: 12px;
   align-items: stretch;
 }
 
-/* COMPACTAÇÃO EXTREMA DOS CAMPOS DO FORMULÁRIO */
-.fieldset {
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 8px;
-  margin: 0;
-  background: rgba(255, 255, 255, 0.02);
-  display: flex;
-  flex-direction: column;
-}
-
+.fieldset,
 .fieldsetA {
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 4px 8px;
-  margin: 0;
-  background: rgba(255, 255, 255, 0.02);
   display: flex;
-  flex-direction: column;
   min-width: 0;
   width: 100%;
+  margin: 0;
+  padding: 10px;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.02);
 }
 
-/* Ajuste nos labels dentro do fieldsetA para economizar espaço */
-.fieldsetA .field {
-  margin-bottom: 4px;
-  font-size: 0.9rem; /* Texto ligeiramente menor */
+.legend {
+  margin-bottom: 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #fff;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
 }
-
-.bloco1 { grid-column: span 1; }
-.bloco2 { grid-column: span 1; }
-.bloco3 { grid-column: span 1; }
-.bloco4 { grid-column: span 1; }
-
-.legend { font-size: 12px; font-weight: 700; color: #fff; text-transform: uppercase; margin-bottom: 6px; }
 
 .field {
   display: flex;
+  min-width: 0;
+  margin-bottom: 6px;
+  padding: 7px 8px;
   flex-direction: column;
-  padding: 4px 6px;
-  margin-bottom: 4px;
-  background: rgba(0, 0, 0, 0.2);
   border: 1px solid var(--border);
   border-radius: 4px;
+  background: rgba(0, 0, 0, 0.2);
 }
 
-.field span { font-size: 12px; color: var(--muted); margin-bottom: 2px; }
+.field > span {
+  margin-bottom: 4px;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
 
-.field input[type="number"], .field select {
-  height: 20px; /* Mantém os inputs finos */
-  font-size: 12px;
-  padding: 0;
-  border: none;
- background: rgb(61, 61, 61);
-  color: var(--text);
+.field input[type="number"],
+.field select {
+  width: 100%;
+  min-width: 0;
+  min-height: 34px;
+  padding: 5px 8px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
   outline: none;
+  background: #3d3d3d;
+  color: var(--text);
 }
 
-/* CHECKBOXES COLADOS UM NO OUTRO PARA ECONOMIZAR ALTURA */
+.field input[type="number"]:focus,
+.field select:focus,
+button:focus-visible {
+  outline: 2px solid var(--accent-hover);
+  outline-offset: 2px;
+}
+
 .checkbox-group {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
 }
 
 .field.checkbox {
-  flex-direction: row; align-items: center; gap: 6px;
-  padding: 2px 4px; margin-bottom: 0;
-  border: none; background: transparent;
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+  margin-bottom: 2px;
+  padding: 5px 4px;
+  border: 0;
+  background: transparent;
   cursor: pointer;
 }
 
-.field.checkbox input[type="checkbox"] { margin: 0; width: 12px; height: 12px; }
-.field.checkbox span { font-size: 12px; margin: 0; color: var(--text); }
+.field.checkbox input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin: 2px 0 0;
+}
 
-/* RODAPÉ DO FORMULÁRIO (BOTÕES) */
+.field.checkbox span {
+  margin: 0;
+  color: var(--text);
+}
+
+.hint {
+  margin-top: 6px;
+  font-size: 0.76rem;
+  line-height: 1.45;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
 .actions {
-  grid-column: 1 / 5; /* Cruza as 4 colunas */
+  grid-column: 1 / -1;
   display: flex;
-  justify-content: flex-end;
-  align-items: center;
+  flex-wrap: wrap;
   gap: 10px;
-  margin-top: 5px;
-  padding-top: 8px;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 2px;
+  padding-top: 10px;
   border-top: 1px solid var(--border);
 }
 
-.msg { flex-grow: 1; font-size: 12px; color: var(--error); }
+.msg {
+  min-width: min(100%, 260px);
+  flex: 1 1 260px;
+  font-size: 0.8rem;
+  color: var(--error);
+  overflow-wrap: anywhere;
+}
 
 button {
-  background: var(--accent); color: #fff; border: none;
-  padding: 6px 14px; border-radius: 4px; font-size: 12px;
-  font-weight: bold; cursor: pointer;
+  min-height: 36px;
+  padding: 7px 14px;
+  border: 0;
+  border-radius: 4px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: normal;
 }
-button:hover { filter: brightness(1.1); }
-button.secondary { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
 
-/* 4. BASE DA TELA: RESULTADOS E HISTÓRICO */
-/* Eles dividem a parte de baixo e só rolam o conteúdo INTERNO se precisar */
-.result-card, .history-card {
+button:hover {
+  filter: brightness(1.1);
+}
+
+button.secondary {
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+}
+
+.result-card,
+.history-card {
   display: flex;
+  min-width: 0;
+  min-height: 260px;
   flex-direction: column;
-  min-height: 0; /* Impede que o card estoure a tela */
 }
 
-.output, .history-list {
-  flex-grow: 1;
-  overflow-y: auto; /* Scroll apenas dentro da caixinha */
+.output,
+.history-list {
+  min-width: 0;
+  min-height: 210px;
+  max-height: 55vh;
+  overflow: auto;
   padding: 10px;
+  border: 1px solid var(--border);
   border-radius: 6px;
   background: rgba(0, 0, 0, 0.2);
-  border: 1px solid var(--border);
+  overflow-wrap: anywhere;
 }
 
-/* Scrollbar fina para ficar elegante */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.history-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
 
-.history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.history-header h2 { margin: 0; }
-.mini-btn { padding: 4px 8px; font-size: 12px; }
+.history-header h2 {
+  margin: 0;
+}
+
+.history-actions-top,
+.history-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mini-btn {
+  min-height: 32px;
+  padding: 5px 9px;
+  font-size: 0.75rem;
+}
+
+.history-item,
+.kv {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.history-item + .history-item,
+.kv + .kv {
+  margin-top: 10px;
+}
+
+.history-meta,
+.k {
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.v {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.err {
+  color: var(--error);
+  white-space: pre-wrap;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Notebook e tablet em orientação horizontal. */
+@media (max-width: 1199px) {
+  .form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Tablet em orientação vertical e telas estreitas. */
+@media (max-width: 899px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .card:first-child {
+    grid-column: auto;
+  }
+
+  .result-card,
+  .history-card {
+    min-height: 0;
+  }
+
+  .output,
+  .history-list {
+    max-height: none;
+  }
+}
+
+/* Celular e janelas pequenas. */
+@media (max-width: 639px) {
+  .container {
+    padding: 10px;
+  }
+
+  .form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .card {
+    padding: 11px;
+  }
+
+  .actions {
+    align-items: stretch;
+  }
+
+  .msg {
+    flex-basis: 100%;
+  }
+
+  .actions button,
+  .history-actions-top button {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  .history-actions-top {
+    width: 100%;
+  }
+
+  .field input[type="number"],
+  .field select {
+    min-height: 44px;
+  }
+
+  .field.checkbox {
+    grid-template-columns: 22px minmax(0, 1fr);
+    padding-block: 7px;
+  }
+
+  .field.checkbox input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* Telas muito estreitas. */
+@media (max-width: 379px) {
+  .container {
+    padding-inline: 8px;
+  }
+
+  .card,
+  .fieldset,
+  .fieldsetA {
+    padding: 9px;
+  }
+}
