@@ -55,6 +55,8 @@ function getDom() {
     interceptAcceptable: document.getElementById("interceptAcceptable"),
     outliersAcceptable: document.getElementById("outliersAcceptable"),
 
+    btnLimparDados: document.getElementById("btnLimparDados"),
+    btnNovaAvaliacao: document.getElementById("btnNovaAvaliacao"),
     btnSaveAnalysis: document.getElementById("btnSaveAnalysis"),
     btnExportHistory: document.getElementById("btnExportHistory"),
     btnClearHistory: document.getElementById("btnClearHistory"),
@@ -122,6 +124,14 @@ function toList(items) {
 
 function nowIso() {
   return new Date().toISOString();
+}
+
+function gerarIdentificador(prefixo = "avaliacao") {
+  if (globalThis.crypto?.randomUUID) {
+    return globalThis.crypto.randomUUID();
+  }
+
+  return `${prefixo}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
 function formatDateTime(iso) {
@@ -355,6 +365,51 @@ function restoreForm(dom, data) {
   dom.outliersAcceptable.checked = !!data.outliersAcceptable;
 }
 
+/* ===== LIMPEZA / NOVA AVALIAÇÃO ===== */
+
+function limparResultadoAtual(dom) {
+  dom.output.innerHTML = `
+    <div class="kv">
+      <div class="v">Preencha os campos e execute a avaliação.</div>
+    </div>
+  `;
+
+  delete dom.form.dataset.lastAnswers;
+  delete dom.form.dataset.lastResult;
+}
+
+function limparCampos(dom, usarValoresIniciais = false) {
+  dom.nLevels.value = usarValoresIniciais ? "5" : "";
+  dom.replicatesPerLevel.value = usarValoresIniciais ? "3" : "";
+  dom.regressionUsed.value = "nao_informado";
+
+  dom.testCochranDone.checked = false;
+  dom.testRDone.checked = false;
+  dom.testR2Done.checked = false;
+  dom.testShapiroDone.checked = false;
+  dom.testDurbinWatsonDone.checked = false;
+  dom.testAnovaDone.checked = false;
+  dom.testTInterceptDone.checked = false;
+  dom.testOutliersDone.checked = false;
+
+  dom.varianceProfile.value = "nao_informado";
+  dom.residualNormal.checked = false;
+  dom.independentResiduals.checked = false;
+  dom.regressionSignificant.checked = false;
+  dom.interceptAcceptable.checked = false;
+  dom.outliersAcceptable.checked = false;
+
+  applyEnableRules(dom);
+  limparResultadoAtual(dom);
+}
+
+function iniciarNovaAvaliacao(dom) {
+  limparCampos(dom, true);
+  dom.form.dataset.avaliacaoId = gerarIdentificador("avaliacao");
+  dom.nLevels.focus({ preventScroll: true });
+  dom.form.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 /* ===== RENDER ===== */
 
 function buildAuditSummary(answers) {
@@ -495,7 +550,8 @@ async function main() {
   const tree = await loadTree();
 
   setMsg(dom, "Pronto.");
-  dom.output.innerHTML = `<div class="kv"><div class="v">Preencha os campos e execute a avaliação.</div></div>`;
+  dom.form.dataset.avaliacaoId = gerarIdentificador("avaliacao");
+  limparResultadoAtual(dom);
 
   const wire = () => applyEnableRules(dom);
 
@@ -510,6 +566,29 @@ async function main() {
 
   applyEnableRules(dom);
   renderHistory(dom);
+
+  dom.btnLimparDados?.addEventListener("click", () => {
+    const confirmado = window.confirm(
+      "Limpar todos os dados preenchidos nesta avaliação? O histórico salvo será preservado."
+    );
+
+    if (!confirmado) return;
+
+    limparCampos(dom, false);
+    setMsg(dom, "Dados inseridos e resultado atual foram limpos.");
+    dom.nLevels.focus({ preventScroll: true });
+  });
+
+  dom.btnNovaAvaliacao?.addEventListener("click", () => {
+    const confirmado = window.confirm(
+      "Iniciar uma nova avaliação? Os dados e o resultado atuais serão descartados, mas o histórico salvo será preservado."
+    );
+
+    if (!confirmado) return;
+
+    iniciarNovaAvaliacao(dom);
+    setMsg(dom, "Nova avaliação iniciada.");
+  });
 
   dom.form.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -532,11 +611,17 @@ async function main() {
 
   dom.btnSaveAnalysis?.addEventListener("click", () => {
     try {
+      if (!dom.form.reportValidity()) {
+        setMsg(dom, "Preencha os campos obrigatórios antes de salvar.", true);
+        return;
+      }
+
       const answers = readAnswers(dom);
       const result = runTree(tree.root, answers);
 
       const record = {
-        id: crypto.randomUUID(),
+        id: gerarIdentificador("registro"),
+        avaliacaoId: dom.form.dataset.avaliacaoId || gerarIdentificador("avaliacao"),
         createdAt: nowIso(),
         formData: snapshotForm(dom),
         answers,
@@ -587,6 +672,9 @@ async function main() {
 
     if (action === "load") {
       restoreForm(dom, record.formData);
+      dom.form.dataset.avaliacaoId = record.avaliacaoId || record.id;
+      dom.form.dataset.lastAnswers = JSON.stringify(record.answers);
+      dom.form.dataset.lastResult = JSON.stringify(record.result);
       dom.output.innerHTML = renderResult(record.answers, record.result);
       setMsg(dom, "Análise carregada do histórico.");
       return;
